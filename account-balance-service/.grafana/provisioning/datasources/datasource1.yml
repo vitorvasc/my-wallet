@@ -1,0 +1,20 @@
+apiVersion: 1
+
+datasources:
+  - name: Prometheus
+    type: prometheus
+    access: proxy
+    url: http://prometheus:9090
+    isDefault: true
+    editable: true
+    jsonData:
+      tlsSkipVerify: true
+      timeInterval: "5s"
+      httpHeaderName1: "Authorization"
+      httpHeaderValue1: "Bearer $GF_SECURITY_ADMIN_API_KEY"
+      httpHeaderName2: "X-Scope-OrgID"
+      httpHeaderValue2: "1"
+      httpHeaderName3: "X-Scope-UserID"
+      httpHeaderValue3: "1"
+      httpHeaderName4: "X-Scope-UserEmail"
+      httpHeaderValue4: "

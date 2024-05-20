@@ -1,0 +1,6 @@
+services:
+  transactions-service:
+    container_name: transactions-service-app
+    build: .
+    ports:
+      - "8081:8081"

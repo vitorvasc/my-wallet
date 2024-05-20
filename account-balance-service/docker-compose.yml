@@ -1,0 +1,6 @@
+services:
+  account-balance-service:
+    container_name: account-balance-service-app
+    build: .
+    ports:
+      - "8080:8080"
