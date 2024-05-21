@@ -4,16 +4,17 @@ import (
 	"database/sql"
 	"fmt"
 	"log"
+	"os"
 
 	_ "github.com/lib/pq"
 )
 
 const (
-	host     = "postgres"
-	port     = 5432
-	user     = "postgres"
-	password = "postgres"
-	dbname   = "account_balance"
+	host     = "PG_HOST"
+	port     = "PG_PORT"
+	user     = "PG_USERNAME"
+	password = "PG_PASSWORD"
+	dbname   = "PG_DBNAME"
 )
 
 type PostgresRepository struct {
@@ -21,7 +22,7 @@ type PostgresRepository struct {
 }
 
 func InitDB() *sql.DB {
-	conn := fmt.Sprintf("host=%s port=%d user=%s password=%s dbname=%s sslmode=disable", host, port, user, password, dbname)
+	conn := fmt.Sprintf("host=%s port=%s user=%s password=%s dbname=%s sslmode=disable", os.Getenv(host), os.Getenv(port), os.Getenv(user), os.Getenv(password), os.Getenv(dbname))
 	db, err := sql.Open("postgres", conn)
 	if err != nil {
 		log.Fatalf("error opening db: %v", err)

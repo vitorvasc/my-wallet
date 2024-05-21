@@ -1,6 +1,12 @@
 services:
   account-balance-service:
     build: ./account-balance-service
+    environment: 
+      PG_HOST: postgres
+      PG_PORT: 5432
+      PG_USERNAME: postgres
+      PG_PASSWORD: postgres
+      PG_DBNAME: postgres
     ports: 
       - "8080:8080"
     depends_on:
@@ -24,9 +30,12 @@ services:
     environment:
       POSTGRES_USER: postgres
       POSTGRES_PASSWORD: postgres
-      POSTGRES_DB: account_balance
+      POSTGRES_DB: postgres
     ports:
       - "5432:5432"
+    volumes:
+      - ./.init/pg-init.sql:/docker-entrypoint-initdb.d/init.sql
+      - pgdata:/var/lib/postgresql/data
 
   zookeeper:
     image: confluentinc/cp-zookeeper:latest
@@ -55,3 +64,6 @@ services:
         sleep 5s &&
         kafka-topics --create --topic=users.account-balance-accreditations --if-not-exists --bootstrap-server=kafka:9092
       "
+
+volumes:
+  pgdata:
