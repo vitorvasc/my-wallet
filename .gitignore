@@ -76,9 +76,6 @@ cmake-build-*/
 # File-based project format
 *.iws
 
-# IntelliJ
-out/
-
 # mpeltonen/sbt-idea plugin
 .idea_modules/
 
@@ -140,3 +137,4 @@ fabric.properties
 # End of https://www.toptal.com/developers/gitignore/api/jetbrains,go
 
 .DS_Store
+.idea/

@@ -31,16 +31,6 @@ func InitDB() *sql.DB {
 		log.Fatalf("error pinging db: %v", err)
 	}
 
-	_, err = db.Exec(`
-		CREATE TABLE IF NOT EXISTS account_balance (
-		    user_id SERIAL PRIMARY KEY,
-		    balance NUMERIC NOT NULL
-		);
-	`)
-	if err != nil {
-		log.Fatalf("error creating table: %v", err)
-	}
-
 	return db
 }
 
@@ -48,12 +38,41 @@ func NewPostgresRepository(db *sql.DB) *PostgresRepository {
 	return &PostgresRepository{db}
 }
 
-func (p PostgresRepository) GetAccountBalance(userID uint64) (float64, error) {
-	// TODO implement me
-	panic("implement me")
+func (r PostgresRepository) GetAccountBalance(userID uint64) (float64, error) {
+	var balance float64
+	err := r.db.QueryRow("SELECT balance FROM account_balance WHERE user_id = $1", userID).Scan(&balance)
+	return balance, err
 }
 
-func (p PostgresRepository) UpdateAccountBalance(userID uint64, amount float64) error {
-	// TODO implement me
-	panic("implement me")
+func (r PostgresRepository) Debit(userID uint64, amount float64) error {
+	tx, err := r.db.Begin()
+	if err != nil {
+		return err
+	}
+
+	defer func() {
+		if err != nil {
+			_ = tx.Rollback()
+		} else {
+			_ = tx.Commit()
+		}
+	}()
+
+	var balance float64
+	err = tx.QueryRow("SELECT balance FROM account_balance WHERE user_id = $1 FOR UPDATE", userID).Scan(&balance)
+	if err != nil {
+		return err
+	}
+
+	if balance < amount {
+		return fmt.Errorf("insufficient funds")
+	}
+
+	_, err = tx.Exec("UPDATE account_balance SET balance = $1 WHERE user_id = $2", amount, userID)
+	return err
+}
+
+func (r PostgresRepository) Accredit(userID uint64, amount float64) error {
+	_, err := r.db.Exec("UPDATE account_balance SET balance = $1 WHERE user_id = $2", amount, userID)
+	return err
 }

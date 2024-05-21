@@ -1,0 +1,7 @@
+global:
+  scrape_interval: 15s
+
+scrape_configs:
+  - job_name: 'transactions-service-app'
+    static_configs:
+      - targets: [ 'transactions-service-app:8081' ]

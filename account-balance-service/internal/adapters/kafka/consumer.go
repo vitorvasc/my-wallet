@@ -1,11 +1,12 @@
 package kafka
 
 import (
+	"account-balance-service/internal/adapters/config"
+	"account-balance-service/internal/core/services"
+	in "account-balance-service/internal/ports/in/kafka"
 	"context"
 	"encoding/json"
 	"log"
-
-	"account-balance-service/internal/core/services"
 
 	"github.com/segmentio/kafka-go"
 )
@@ -15,7 +16,7 @@ const (
 	broker = "kafka:9092"
 )
 
-func Consume(accountBalanceService *services.AccountBalanceService) {
+func Consume() {
 	r := kafka.NewReader(kafka.ReaderConfig{
 		Brokers: []string{broker},
 		Topic:   topic,
@@ -30,14 +31,15 @@ func Consume(accountBalanceService *services.AccountBalanceService) {
 			continue
 		}
 
-		request := new(services.AccreditValueRequest)
-		if err := json.Unmarshal(m.Value, request); err != nil {
+		request := new(in.AccreditationRequest)
+		if err = json.Unmarshal(m.Value, request); err != nil {
 			log.Printf("error unmarshalling message: %v", err)
 			continue
 		}
 
 		// Accredit account balance
-		if err := accountBalanceService.AccreditValue(request.UserID, request.Amount); err != nil {
+		accountBalanceService := config.Container.Get(config.AccountBalanceService).(services.AccountBalance)
+		if err = accountBalanceService.AccreditValue(request.UserID, request.Amount); err != nil {
 			log.Printf("error accrediting account balance: %v", err)
 			continue
 		}
