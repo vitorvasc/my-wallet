@@ -3,6 +3,7 @@ package services
 import (
 	"account-balance-service/internal/core/domain"
 	"account-balance-service/internal/ports/out/db"
+	"log"
 )
 
 type AccountBalance interface {
@@ -22,6 +23,7 @@ func NewAccountBalanceService(repository db.AccountBalanceRepository) AccountBal
 func (s *accountBalanceService) GetBalance(userID uint64) (float64, *domain.ServiceError) {
 	balance, err := s.repository.GetAccountBalance(userID)
 	if err != nil {
+		log.Printf("Error obtaining account balance: %v", err)
 		return 0, domain.ErrObtainingAccountBalance
 	}
 	return balance, nil

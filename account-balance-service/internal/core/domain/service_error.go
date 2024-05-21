@@ -6,8 +6,8 @@ import (
 
 type ServiceError struct {
 	error
-	Code    int
-	Message string
+	Code    int    `json:"code"`
+	Message string `json:"message"`
 }
 
 var (

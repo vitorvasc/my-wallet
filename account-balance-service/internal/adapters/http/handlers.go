@@ -1,7 +1,6 @@
 package http
 
 import (
-	"account-balance-service/internal/adapters/config"
 	"account-balance-service/internal/core/services"
 	"log"
 	"strconv"
@@ -13,7 +12,7 @@ const (
 	pathParamUserId = "userId"
 )
 
-func getAccountBalance() gin.HandlerFunc {
+func getAccountBalance(service services.AccountBalance) gin.HandlerFunc {
 	return func(c *gin.Context) {
 		if c.Param(pathParamUserId) == "" {
 			c.JSON(400, gin.H{
@@ -30,13 +29,10 @@ func getAccountBalance() gin.HandlerFunc {
 			return
 		}
 
-		accountBalanceService := config.Container.Get(config.AccountBalanceService).(services.AccountBalance)
-		balance, err := accountBalanceService.GetBalance(userId)
+		balance, err := service.GetBalance(userId)
 		if err != nil {
-			log.Printf("error on get account balance: %v", err)
-			c.JSON(500, gin.H{
-				"message": "internal server error",
-			})
+			log.Printf("Error obtaining account balance: %v", err)
+			c.JSON(500, err)
 			return
 		}
 
@@ -47,7 +43,7 @@ func getAccountBalance() gin.HandlerFunc {
 	}
 }
 
-func createAccountDebit() gin.HandlerFunc {
+func createDebit() gin.HandlerFunc {
 	return func(c *gin.Context) {
 		c.JSON(200, gin.H{
 			"message": "pong",
