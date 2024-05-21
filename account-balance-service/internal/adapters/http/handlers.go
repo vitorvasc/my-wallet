@@ -3,6 +3,7 @@ package http
 import (
 	"account-balance-service/internal/adapters/config"
 	"account-balance-service/internal/core/services"
+	"log"
 	"strconv"
 
 	"github.com/gin-gonic/gin"
@@ -32,6 +33,10 @@ func getAccountBalance() gin.HandlerFunc {
 		accountBalanceService := config.Container.Get(config.AccountBalanceService).(services.AccountBalance)
 		balance, err := accountBalanceService.GetBalance(userId)
 		if err != nil {
+			log.Printf("error on get account balance: %v", err)
+			c.JSON(500, gin.H{
+				"message": "internal server error",
+			})
 			return
 		}
 

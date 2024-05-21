@@ -1,0 +1,13 @@
+global:
+  scrape_interval: 15s
+
+scrape_configs:
+  - job_name: 'prometheus'
+    static_configs:
+      - targets: [ 'prometheus:9090' ]
+  - job_name: 'account-balance-service-app'
+    static_configs:
+      - targets: [ 'account-balance-service-app:8080' ]
+  - job_name: 'transactions-service-app'
+    static_configs:
+      - targets: [ 'transactions-service-app:8081' ]
