@@ -37,13 +37,6 @@ services:
       - ./.init/pg-init.sql:/docker-entrypoint-initdb.d/init.sql
       - pgdata:/var/lib/postgresql/data
 
-  zookeeper:
-    image: confluentinc/cp-zookeeper:latest
-    environment:
-      ZOOKEEPER_CLIENT_PORT: 2181
-    ports:
-      - "2181:2181"
-
   kafka:
     image: confluentinc/cp-kafka:latest
     ports:
@@ -51,9 +44,6 @@ services:
     environment:
       KAFKA_OFFSETS_TOPIC_REPLICATION_FACTOR: 1
       KAFKA_ADVERTISED_LISTENERS: PLAINTEXT://kafka:9092
-      KAFKA_ZOOKEEPER_CONNECT: zookeeper:2181
-    depends_on:
-      - zookeeper
 
   kafka-topics-generator:
     image: confluentinc/cp-kafka:latest
@@ -78,6 +68,8 @@ services:
     image: grafana/grafana:latest
     ports:
       - "3000:3000"
+    depends_on:
+      - prometheus
     environment:
       GF_AUTH_DISABLE_LOGIN_FORM: true
       GF_AUTH_ANONYMOUS_ENABLED: true
