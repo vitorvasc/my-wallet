@@ -1,9 +1,10 @@
 package main
 
 import (
+	"account-balance-service/internal/adapters/db/postgres"
 	"log"
 
-	"account-balance-service/internal/adapters/db"
+	"account-balance-service/internal/adapters/config"
 	"account-balance-service/internal/adapters/http"
 	"account-balance-service/internal/adapters/kafka"
 	"account-balance-service/internal/adapters/metrics"
@@ -13,18 +14,23 @@ import (
 )
 
 func main() {
-	dbConn := db.InitDB()
+	dbConn := postgres.InitDB()
 	defer dbConn.Close()
 
-	accountBalanceRepository := db.NewPostgresRepository(dbConn)
-	accountBalanceService := services.NewAccountBalanceService(accountBalanceRepository)
+	pgRepository := postgres.NewPostgresRepository(dbConn)
+
+	userService := services.NewUserService(pgRepository)
+	accountBalanceService := services.NewAccountBalanceService(pgRepository, userService)
+
+	config.Container.Register(config.AccountBalanceService, accountBalanceService)
+	config.Container.Register(config.UsersService, userService)
 
 	r := gin.Default()
 
-	http.MapRoutes(r, accountBalanceService)
+	http.MapRoutes(r)
 	metrics.MapRoutes(r)
 
-	go kafka.Consume(accountBalanceService)
+	go kafka.Consume()
 
 	if err := r.Run(":8080"); err != nil {
 		log.Fatalf("error running server: %v", err)

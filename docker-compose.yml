@@ -3,7 +3,7 @@ services:
     build: ./account-balance-service
     container_name: account-balance-service
     environment: 
-      PG_HOST: host.docker.internal
+      PG_HOST: postgres
       PG_PORT: 5432
       PG_USERNAME: postgres
       PG_PASSWORD: postgres
@@ -76,6 +76,7 @@ services:
 
   kafka-topics-generator:
     image: confluentinc/cp-kafka:latest
+    container_name: kafka-topics-generator
     depends_on:
       - kafka
     command: >
