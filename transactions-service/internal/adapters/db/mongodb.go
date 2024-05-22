@@ -4,7 +4,6 @@ import (
 	"context"
 	"fmt"
 	"log"
-	"time"
 
 	"go.mongodb.org/mongo-driver/mongo"
 	"go.mongodb.org/mongo-driver/mongo/options"
@@ -27,16 +26,12 @@ func NewMongoRepository(db *mongo.Database) *MongoRepository {
 	}
 }
 
-func InitDB() *mongo.Database {
-	ctx, cancel := context.WithTimeout(context.Background(), 10*time.Second)
-	defer cancel()
-
+func InitDB(ctx context.Context) *mongo.Database {
 	conn := fmt.Sprintf("mongodb://%s:%d", host, port)
 	client, err := mongo.Connect(ctx, options.Client().ApplyURI(conn))
 	if err != nil {
 		log.Fatalf("error connecting to db: %v", err)
 	}
 	db := client.Database(dbname)
-
 	return db
 }
