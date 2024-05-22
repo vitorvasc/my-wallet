@@ -4,6 +4,7 @@ import (
 	"context"
 	"log"
 	"time"
+	"transactions-service/internal/adapters/kafka"
 
 	"transactions-service/internal/adapters/config"
 	"transactions-service/internal/adapters/db"
@@ -23,14 +24,22 @@ func main() {
 
 	mongoRepository := db.NewMongoRepository(database)
 
+	kafkaProducer := kafka.NewKafkaProducer()
+	defer kafkaProducer.ProducerClose()
+
 	transactionStrategies := []strategies.HandleTransactionStrategy{
-		strategies.NewAccountTransferStrategy(mongoRepository),
-		strategies.NewBillPaymentStrategy(mongoRepository),
-		strategies.NewDepositStrategy(mongoRepository),
-		strategies.NewWithdrawalStrategy(mongoRepository),
+		strategies.NewAccountTransferStrategy(),
+		strategies.NewBillPaymentStrategy(),
+		strategies.NewDepositStrategy(),
+		strategies.NewWithdrawalStrategy(),
 	}
 
-	transactionService := services.NewTransactionService(mongoRepository, transactionStrategies)
+	accreditationService := services.NewAccreditationService(kafkaProducer)
+	transactionService := services.NewTransactionService(
+		mongoRepository,
+		transactionStrategies,
+		accreditationService,
+	)
 
 	config.Container.Register(config.TransactionService, transactionService)
 

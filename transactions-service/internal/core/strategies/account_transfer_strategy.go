@@ -3,15 +3,12 @@ package strategies
 import (
 	"transactions-service/internal/core/domain"
 	in "transactions-service/internal/ports/in/http"
-	"transactions-service/internal/ports/out/db"
 )
 
-type accountTransferStrategy struct {
-	repository db.TransactionRepository
-}
+type accountTransferStrategy struct{}
 
-func NewAccountTransferStrategy(repository db.TransactionRepository) HandleTransactionStrategy {
-	return &accountTransferStrategy{repository: repository}
+func NewAccountTransferStrategy() HandleTransactionStrategy {
+	return &accountTransferStrategy{}
 }
 
 func (s *accountTransferStrategy) CanProcess(transactionType in.TransactionType) bool {

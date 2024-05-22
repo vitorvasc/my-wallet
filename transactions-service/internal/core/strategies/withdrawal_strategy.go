@@ -3,15 +3,12 @@ package strategies
 import (
 	"transactions-service/internal/core/domain"
 	in "transactions-service/internal/ports/in/http"
-	"transactions-service/internal/ports/out/db"
 )
 
-type withdrawalStrategy struct {
-	repository db.TransactionRepository
-}
+type withdrawalStrategy struct{}
 
-func NewWithdrawalStrategy(repository db.TransactionRepository) HandleTransactionStrategy {
-	return &withdrawalStrategy{repository: repository}
+func NewWithdrawalStrategy() HandleTransactionStrategy {
+	return &withdrawalStrategy{}
 }
 
 func (s *withdrawalStrategy) CanProcess(transactionType in.TransactionType) bool {

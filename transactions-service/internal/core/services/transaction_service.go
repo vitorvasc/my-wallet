@@ -4,7 +4,7 @@ import (
 	"transactions-service/internal/core/domain"
 	"transactions-service/internal/core/strategies"
 	in "transactions-service/internal/ports/in/http"
-	"transactions-service/internal/ports/out/db"
+	out "transactions-service/internal/ports/out/repository"
 )
 
 type TransactionService interface {
@@ -14,14 +14,20 @@ type TransactionService interface {
 }
 
 type transactionService struct {
-	repository db.TransactionRepository
-	strategies []strategies.HandleTransactionStrategy
+	repository           out.TransactionRepository
+	strategies           []strategies.HandleTransactionStrategy
+	accreditationService AccreditationService
 }
 
-func NewTransactionService(repository db.TransactionRepository, strategies []strategies.HandleTransactionStrategy) TransactionService {
+func NewTransactionService(
+	repository out.TransactionRepository,
+	strategies []strategies.HandleTransactionStrategy,
+	accreditationService AccreditationService,
+) TransactionService {
 	return &transactionService{
-		repository: repository,
-		strategies: strategies,
+		repository:           repository,
+		strategies:           strategies,
+		accreditationService: accreditationService,
 	}
 }
 
