@@ -1,27 +1,97 @@
 package http
 
-import "github.com/gin-gonic/gin"
+import (
+	"net/http"
+	"strconv"
+
+	"transactions-service/internal/adapters/config"
+	"transactions-service/internal/core/services"
+	in "transactions-service/internal/ports/in/http"
+	out "transactions-service/internal/ports/out/http"
+
+	"github.com/gin-gonic/gin"
+)
+
+const (
+	pathParamUserID        = "userId"
+	pathParamTransactionID = "transactionId"
+)
 
 func createTransaction() gin.HandlerFunc {
 	return func(c *gin.Context) {
-		c.JSON(200, gin.H{
-			"message": "pong",
+		var createTransactionRequest in.CreateTransactionRequest
+		if err := c.ShouldBindJSON(&createTransactionRequest); err != nil {
+			c.JSON(http.StatusBadRequest, out.NewApiError(http.StatusBadRequest, err.Error()))
+			return
+		}
+
+		service := config.Container.Get(config.TransactionService).(services.TransactionService)
+		transaction, err := service.CreateTransaction(createTransactionRequest)
+		if err != nil {
+			c.JSON(err.GetCode(), out.NewApiError(err.GetCode(), err.GetMessage()))
+			return
+		}
+
+		c.JSON(http.StatusCreated, out.TransactionResponse{
+			UserID: transaction.ID,
+			Status: string(transaction.Status),
 		})
 	}
 }
 
 func updateTransaction() gin.HandlerFunc {
 	return func(c *gin.Context) {
-		c.JSON(200, gin.H{
-			"message": "pong",
+		if c.Param(pathParamTransactionID) == "" {
+			c.JSON(http.StatusBadRequest, out.NewRequiredFieldApiError(http.StatusBadRequest, pathParamTransactionID))
+			return
+		}
+
+		transactionID, parsingError := strconv.ParseUint(c.Param(pathParamTransactionID), 10, 64)
+		if parsingError != nil {
+			c.JSON(http.StatusBadRequest, out.NewInvalidFieldApiError(http.StatusBadRequest, pathParamTransactionID))
+			return
+		}
+
+		var updateTransactionRequest in.UpdateTransactionRequest
+		if err := c.ShouldBindJSON(&updateTransactionRequest); err != nil {
+			c.JSON(http.StatusBadRequest, out.NewApiError(http.StatusBadRequest, err.Error()))
+			return
+		}
+
+		service := config.Container.Get(config.TransactionService).(services.TransactionService)
+		transaction, err := service.UpdateTransaction(transactionID, updateTransactionRequest)
+		if err != nil {
+			c.JSON(err.GetCode(), out.NewApiError(err.GetCode(), err.GetMessage()))
+			return
+		}
+
+		c.JSON(http.StatusCreated, out.TransactionResponse{
+			ID:     transaction.ID,
+			Status: string(transaction.Status),
 		})
 	}
 }
 
 func getUserTransactions() gin.HandlerFunc {
 	return func(c *gin.Context) {
-		c.JSON(200, gin.H{
-			"message": "pong",
-		})
+		if c.Param(pathParamUserID) == "" {
+			c.JSON(http.StatusBadRequest, out.NewRequiredFieldApiError(http.StatusBadRequest, pathParamUserID))
+			return
+		}
+
+		userID, parsingError := strconv.ParseUint(c.Param(pathParamUserID), 10, 64)
+		if parsingError != nil {
+			c.JSON(http.StatusBadRequest, out.NewInvalidFieldApiError(http.StatusBadRequest, pathParamUserID))
+			return
+		}
+
+		service := config.Container.Get(config.TransactionService).(services.TransactionService)
+		transactions, err := service.GetTransactionsByUser(userID)
+		if err != nil {
+			c.JSON(err.GetCode(), out.NewApiError(err.GetCode(), err.GetMessage()))
+			return
+		}
+
+		c.JSON(http.StatusCreated, transactions)
 	}
 }

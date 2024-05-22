@@ -21,6 +21,12 @@ type MongoRepository struct {
 	collection *mongo.Collection
 }
 
+func NewMongoRepository(db *mongo.Database) *MongoRepository {
+	return &MongoRepository{
+		db.Collection(collection),
+	}
+}
+
 func InitDB() *mongo.Database {
 	ctx, cancel := context.WithTimeout(context.Background(), 10*time.Second)
 	defer cancel()
@@ -33,15 +39,4 @@ func InitDB() *mongo.Database {
 	db := client.Database(dbname)
 
 	return db
-}
-
-func NewMongoRepository(db *mongo.Database) *MongoRepository {
-	return &MongoRepository{
-		db.Collection(collection),
-	}
-}
-
-func (r *MongoRepository) GetTransactionsByUserID(userID uint64) {
-	// TODO implement me
-	panic("implement me")
 }

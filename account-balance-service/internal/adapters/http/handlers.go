@@ -13,24 +13,24 @@ import (
 )
 
 const (
-	pathParamUserId = "userId"
+	pathParamUserID = "userId"
 )
 
 func getAccountBalance() gin.HandlerFunc {
 	return func(c *gin.Context) {
-		if c.Param(pathParamUserId) == "" {
-			c.JSON(http.StatusBadRequest, out.NewRequiredFieldApiError(http.StatusBadRequest, pathParamUserId))
+		if c.Param(pathParamUserID) == "" {
+			c.JSON(http.StatusBadRequest, out.NewRequiredFieldApiError(http.StatusBadRequest, pathParamUserID))
 			return
 		}
 
-		userId, parsingError := strconv.ParseUint(c.Param(pathParamUserId), 10, 64)
+		userID, parsingError := strconv.ParseUint(c.Param(pathParamUserID), 10, 64)
 		if parsingError != nil {
-			c.JSON(http.StatusBadRequest, out.NewInvalidFieldApiError(http.StatusBadRequest, pathParamUserId))
+			c.JSON(http.StatusBadRequest, out.NewInvalidFieldApiError(http.StatusBadRequest, pathParamUserID))
 			return
 		}
 
 		service := config.Container.Get(config.AccountBalanceService).(services.AccountBalanceService)
-		balance, err := service.GetBalance(userId)
+		balance, err := service.GetBalance(userID)
 		if err != nil {
 			c.JSON(err.GetCode(), out.NewApiError(err.GetCode(), err.GetMessage()))
 			return
@@ -45,14 +45,14 @@ func getAccountBalance() gin.HandlerFunc {
 
 func createDebit() gin.HandlerFunc {
 	return func(c *gin.Context) {
-		if c.Param(pathParamUserId) == "" {
-			c.JSON(http.StatusBadRequest, out.NewRequiredFieldApiError(http.StatusBadRequest, pathParamUserId))
+		if c.Param(pathParamUserID) == "" {
+			c.JSON(http.StatusBadRequest, out.NewRequiredFieldApiError(http.StatusBadRequest, pathParamUserID))
 			return
 		}
 
-		userId, parsingError := strconv.ParseUint(c.Param(pathParamUserId), 10, 64)
+		userID, parsingError := strconv.ParseUint(c.Param(pathParamUserID), 10, 64)
 		if parsingError != nil {
-			c.JSON(http.StatusBadRequest, out.NewInvalidFieldApiError(http.StatusBadRequest, pathParamUserId))
+			c.JSON(http.StatusBadRequest, out.NewInvalidFieldApiError(http.StatusBadRequest, pathParamUserID))
 			return
 		}
 
@@ -70,7 +70,7 @@ func createDebit() gin.HandlerFunc {
 		}
 
 		c.JSON(http.StatusCreated, out.DebitResponse{
-			UserID:  userId,
+			UserID:  userID,
 			Message: "debited successfully",
 		})
 	}
@@ -78,19 +78,19 @@ func createDebit() gin.HandlerFunc {
 
 func getUser() gin.HandlerFunc {
 	return func(c *gin.Context) {
-		if c.Param(pathParamUserId) == "" {
-			c.JSON(http.StatusBadRequest, out.NewRequiredFieldApiError(http.StatusBadRequest, pathParamUserId))
+		if c.Param(pathParamUserID) == "" {
+			c.JSON(http.StatusBadRequest, out.NewRequiredFieldApiError(http.StatusBadRequest, pathParamUserID))
 			return
 		}
 
-		userId, parsingError := strconv.ParseUint(c.Param(pathParamUserId), 10, 64)
+		userID, parsingError := strconv.ParseUint(c.Param(pathParamUserID), 10, 64)
 		if parsingError != nil {
-			c.JSON(http.StatusBadRequest, out.NewInvalidFieldApiError(http.StatusBadRequest, pathParamUserId))
+			c.JSON(http.StatusBadRequest, out.NewInvalidFieldApiError(http.StatusBadRequest, pathParamUserID))
 			return
 		}
 
 		service := config.Container.Get(config.UsersService).(services.UserService)
-		user, err := service.GetUserByID(userId)
+		user, err := service.GetUserByID(userID)
 		if err != nil {
 			c.JSON(err.GetCode(), out.NewApiError(err.GetCode(), err.GetMessage()))
 			return
