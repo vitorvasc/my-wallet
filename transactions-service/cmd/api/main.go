@@ -4,11 +4,11 @@ import (
 	"context"
 	"log"
 	"time"
-	"transactions-service/internal/adapters/kafka"
 
 	"transactions-service/internal/adapters/config"
 	"transactions-service/internal/adapters/db"
 	"transactions-service/internal/adapters/http"
+	"transactions-service/internal/adapters/kafka"
 	"transactions-service/internal/adapters/metrics"
 	"transactions-service/internal/core/services"
 	"transactions-service/internal/core/strategies"
