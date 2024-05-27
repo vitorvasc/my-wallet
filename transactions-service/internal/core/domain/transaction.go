@@ -4,12 +4,13 @@ import "time"
 
 type Transaction struct {
 	ID           uint64
-	Type         string
 	UserID       uint64
+	Description  string
+	Type         string
 	From         TransactionFrom
 	To           TransactionTo
 	Status       TransactionStatus
-	StatusDetail string
+	StatusDetail TransactionStatusDetail
 	CreatedAt    time.Time
 	UpdatedAt    time.Time
 }
@@ -20,6 +21,16 @@ var (
 	Approved TransactionStatus = "approved"
 	Rejected TransactionStatus = "rejected"
 	Reverted TransactionStatus = "reverted"
+)
+
+type TransactionStatusDetail string
+
+var (
+	Processed         TransactionStatusDetail = "processed"
+	Refunded          TransactionStatusDetail = "refunded"
+	InvalidAmount     TransactionStatusDetail = "invalid_amount"
+	InsufficientFunds TransactionStatusDetail = "insufficient_funds"
+	UnexpectedError   TransactionStatusDetail = "unexpected_error"
 )
 
 type TransactionFrom struct {

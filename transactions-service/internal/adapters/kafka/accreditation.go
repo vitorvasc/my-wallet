@@ -8,7 +8,7 @@ import (
 	"github.com/segmentio/kafka-go"
 )
 
-func (p *KafkaProducer) AccreditateUserBalance(content out.UserBalanceAccreditation) error {
+func (p *KafkaProducer) CreateUserBalanceCredit(content out.UserBalanceCredit) error {
 	val, err := json.Marshal(content)
 	if err != nil {
 		return err

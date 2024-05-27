@@ -32,7 +32,6 @@ func NewTransactionService(
 }
 
 func (s *transactionService) CreateTransaction(createTransaction in.CreateTransactionRequest) (*domain.Transaction, domain.ServiceError) {
-
 	for _, strategy := range s.strategies {
 		if strategy.CanProcess(createTransaction.Type) {
 			return strategy.Process(createTransaction)

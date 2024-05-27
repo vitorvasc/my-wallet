@@ -29,6 +29,8 @@ var (
 	ErrObtainingUserTransactions = newServiceError(http.StatusInternalServerError, "error obtaining user transactions")
 
 	ErrProcessingTransactionStrategyNotFound = newServiceError(http.StatusUnprocessableEntity, "error processing transaction strategy not found")
+
+	ErrInvalidAmount = newServiceError(http.StatusBadRequest, "invalid amount")
 )
 
 func newServiceError(code int, message string) ServiceError {

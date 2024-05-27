@@ -21,7 +21,7 @@ type PaymentMethod string
 var (
 	AccountBalance PaymentMethod = "account_balance"
 
-	PureCash PaymentMethod = "effective"
+	PureCash PaymentMethod = "pure_cash"
 )
 
 type TransactionFrom struct {

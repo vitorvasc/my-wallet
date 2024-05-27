@@ -3,7 +3,7 @@ package services
 import out "transactions-service/internal/ports/out/repository"
 
 type AccreditationService interface {
-	AccreditateUserBalance(userID uint64, amount float64) error
+	CreditUserBalance(userID uint64, amount float64) error
 }
 
 type accreditationService struct {
@@ -14,8 +14,8 @@ func NewAccreditationService(repository out.AccreditationRepository) Accreditati
 	return &accreditationService{repository: repository}
 }
 
-func (s *accreditationService) AccreditateUserBalance(userID uint64, amount float64) error {
-	return s.repository.AccreditateUserBalance(out.UserBalanceAccreditation{
+func (s *accreditationService) CreditUserBalance(userID uint64, amount float64) error {
+	return s.repository.CreateUserBalanceCredit(out.UserBalanceCredit{
 		UserID: userID,
 		Amount: amount,
 	})
