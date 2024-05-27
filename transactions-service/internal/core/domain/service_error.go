@@ -16,14 +16,9 @@ type serviceError struct {
 }
 
 var (
-	ErrUserNotFound            = newServiceError(http.StatusNotFound, "invalid user")
-	ErrInsufficientFunds       = newServiceError(http.StatusBadRequest, "insufficient funds")
-	ErrObtainingAccountBalance = newServiceError(http.StatusInternalServerError, "error obtaining account balance")
-	ErrAccreditingValue        = newServiceError(http.StatusInternalServerError, "unexpected accreditation error")
-	ErrDebitingValue           = newServiceError(http.StatusInternalServerError, "unexpected debiting error")
-	ErrObtainingUser           = newServiceError(http.StatusInternalServerError, "error obtaining user")
-
 	ErrObtainingTransaction = newServiceError(http.StatusInternalServerError, "error obtaining transaction")
+	ErrParsingTransaction   = newServiceError(http.StatusInternalServerError, "error parsing transaction")
+	ErrCreatingTransaction  = newServiceError(http.StatusInternalServerError, "error creating transaction")
 	ErrUpdatingTransaction  = newServiceError(http.StatusInternalServerError, "error updating transaction")
 
 	ErrObtainingUserTransactions = newServiceError(http.StatusInternalServerError, "error obtaining user transactions")
