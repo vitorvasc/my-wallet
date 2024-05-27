@@ -1,9 +1,10 @@
 package services
 
 import (
+	"testing"
+
 	"account-balance-service/internal/core/domain"
 	"account-balance-service/internal/ports/out/db"
-	"testing"
 
 	"github.com/stretchr/testify/suite"
 )
@@ -13,7 +14,7 @@ type UserServiceTestSuite struct {
 	repository *db.UsersRepositoryMock
 }
 
-func TestService(t *testing.T) {
+func TestUserService(t *testing.T) {
 	suite.Run(t, new(UserServiceTestSuite))
 }
 
