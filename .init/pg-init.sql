@@ -1,8 +1,4 @@
-CREATE DATABASE account_balance;
-
-USE account_balance;
-
-CREATE TABLE IF NOT EXISTS account_balance (
+CREATE TABLE account_balance (
     user_id SERIAL PRIMARY KEY,
     balance NUMERIC NOT NULL
 );
