@@ -20,6 +20,11 @@ services:
   transactions-service:
     build: ./transactions-service
     container_name: transactions-service
+    environment:
+      MONGODB_HOST: mongo
+      MONGODB_PORT: 27017
+      MONGODB_DATABASE: transactions
+      MONGODB_COLLECTION: transactions
     ports: 
       - "8081:8081"
     depends_on:

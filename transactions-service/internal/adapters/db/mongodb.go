@@ -4,16 +4,17 @@ import (
 	"context"
 	"fmt"
 	"log"
+	"os"
 
 	"go.mongodb.org/mongo-driver/mongo"
 	"go.mongodb.org/mongo-driver/mongo/options"
 )
 
 const (
-	host       = "mongodb"
-	port       = 27017
-	dbname     = "transactions"
-	collection = "transactions"
+	host       = "MONGODB_HOST"
+	port       = "MONGODB_PORT"
+	dbname     = "MONGODB_DATABASE"
+	collection = "MONGODB_COLLECTION"
 )
 
 type MongoRepository struct {
@@ -22,16 +23,16 @@ type MongoRepository struct {
 
 func NewMongoRepository(db *mongo.Database) *MongoRepository {
 	return &MongoRepository{
-		db.Collection(collection),
+		db.Collection(os.Getenv(collection)),
 	}
 }
 
 func InitDB(ctx context.Context) *mongo.Database {
-	conn := fmt.Sprintf("mongodb://%s:%d", host, port)
+	conn := fmt.Sprintf("mongodb://%s:%s", os.Getenv(host), os.Getenv(port))
 	client, err := mongo.Connect(ctx, options.Client().ApplyURI(conn))
 	if err != nil {
 		log.Fatalf("error connecting to db: %v", err)
 	}
-	db := client.Database(dbname)
+	db := client.Database(os.Getenv(dbname))
 	return db
 }
