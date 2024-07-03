@@ -32,6 +32,8 @@ services:
     container_name: mongo
     ports: 
       - "27017:27017"
+    volumes:
+      - mongodata:/data/db
     networks:
       - my-wallet
 
@@ -118,6 +120,7 @@ services:
 
 volumes:
   pgdata:
+  mongodata:
 
 networks:
   my-wallet:
