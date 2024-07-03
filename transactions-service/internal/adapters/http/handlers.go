@@ -7,7 +7,7 @@ import (
 	"transactions-service/internal/adapters/config"
 	"transactions-service/internal/core/services"
 	in "transactions-service/internal/ports/in/http"
-	out "transactions-service/internal/ports/out/http"
+	out "transactions-service/internal/ports/out/dto"
 
 	"github.com/gin-gonic/gin"
 )
@@ -92,6 +92,6 @@ func getUserTransactions() gin.HandlerFunc {
 			return
 		}
 
-		c.JSON(http.StatusCreated, transactions)
+		c.JSON(http.StatusOK, transactions)
 	}
 }

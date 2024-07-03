@@ -3,12 +3,13 @@ package kafka
 import (
 	"context"
 	"encoding/json"
-	out "transactions-service/internal/ports/out/repository"
+
+	"transactions-service/internal/ports/out/dto"
 
 	"github.com/segmentio/kafka-go"
 )
 
-func (p *KafkaProducer) CreateUserBalanceCredit(content out.UserBalanceCredit) error {
+func (p *KafkaProducer) CreateUserBalanceCredit(content dto.AccountCreditCreation) error {
 	val, err := json.Marshal(content)
 	if err != nil {
 		return err

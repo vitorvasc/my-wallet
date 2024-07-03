@@ -7,7 +7,7 @@ import (
 	"account-balance-service/internal/adapters/config"
 	"account-balance-service/internal/core/services"
 	in "account-balance-service/internal/ports/in/http"
-	out "account-balance-service/internal/ports/out/http"
+	out "account-balance-service/internal/ports/out/dto"
 
 	"github.com/gin-gonic/gin"
 )

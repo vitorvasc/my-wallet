@@ -1,4 +1,4 @@
-package http
+package dto
 
 type TransactionResponse struct {
 	ID           uint64 `json:"id"`

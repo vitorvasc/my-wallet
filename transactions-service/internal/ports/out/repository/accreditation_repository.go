@@ -1,10 +1,7 @@
 package repository
 
-type UserBalanceCredit struct {
-	UserID uint64  `json:"user_id"`
-	Amount float64 `json:"amount"`
-}
+import "transactions-service/internal/ports/out/dto"
 
 type AccreditationRepository interface {
-	CreateUserBalanceCredit(userBalanceAccreditation UserBalanceCredit) error
+	CreateUserBalanceCredit(accountCreditCreation dto.AccountCreditCreation) error
 }
