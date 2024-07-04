@@ -2,7 +2,6 @@ package strategies
 
 import (
 	"errors"
-	"log"
 	"time"
 
 	out "transactions-service/internal/adapters/out/http"
@@ -10,6 +9,7 @@ import (
 	"transactions-service/internal/core/domain"
 	"transactions-service/internal/core/services"
 	in "transactions-service/internal/ports/in/http"
+	"transactions-service/internal/ports/out/repository"
 )
 
 type depositStrategy struct{}
@@ -27,7 +27,6 @@ func (s *depositStrategy) Process(createTransaction in.CreateTransactionRequest)
 	user, err := usersRestClient.GetUserByID(createTransaction.From.UserID)
 	if err != nil {
 		if errors.As(err, &domain.ErrUserNotFound) {
-			log.Printf("[error] user not found: %v", err)
 			return nil, domain.ErrInvalidUsersInvolved
 		}
 		return nil, domain.ErrObtainingUserByID
@@ -50,11 +49,20 @@ func (s *depositStrategy) Process(createTransaction in.CreateTransactionRequest)
 
 	transaction.Status = domain.Approved
 	transaction.StatusDetail = domain.Processed
+
+	persistTransaction(transaction)
+
 	return transaction, nil
+}
+
+func persistTransaction(transaction *domain.Transaction) {
+	r := config.Container.Get(config.MongoRepository).(repository.TransactionRepository)
+	_ = r.CreateTransaction(transaction)
 }
 
 func mapToTransaction(createTransaction in.CreateTransactionRequest, user *domain.User) *domain.Transaction {
 	return &domain.Transaction{
+		UserID:      user.UserID,
 		Type:        string(createTransaction.Type),
 		Description: createTransaction.Description,
 		From: domain.TransactionFrom{

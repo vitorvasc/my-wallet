@@ -7,13 +7,17 @@ import (
 	"transactions-service/internal/core/domain"
 
 	"go.mongodb.org/mongo-driver/bson"
+	"go.mongodb.org/mongo-driver/bson/primitive"
 )
 
 func (r *MongoRepository) CreateTransaction(transaction *domain.Transaction) error {
 	res, err := r.collection.InsertOne(context.Background(), transaction)
 	if err != nil {
+		log.Printf("[TransactionRepository_CreateTransaction] Error creating transaction: %v", err)
 		return domain.ErrCreatingTransaction
 	}
+
+	transaction.ID = res.InsertedID.(primitive.ObjectID).Hex()
 	log.Printf("[repository] Transaction created with ID: %s", res.InsertedID)
 	return nil
 }

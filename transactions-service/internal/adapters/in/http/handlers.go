@@ -33,8 +33,10 @@ func createTransaction() gin.HandlerFunc {
 		}
 
 		c.JSON(http.StatusCreated, out.TransactionResponse{
-			UserID: transaction.ID,
-			Status: string(transaction.Status),
+			ID:           transaction.ID,
+			UserID:       transaction.To.UserID,
+			Status:       string(transaction.Status),
+			StatusDetail: string(transaction.StatusDetail),
 		})
 	}
 }
@@ -66,8 +68,9 @@ func updateTransaction() gin.HandlerFunc {
 		}
 
 		c.JSON(http.StatusCreated, out.TransactionResponse{
-			ID:     transaction.ID,
-			Status: string(transaction.Status),
+			ID:           transaction.ID,
+			Status:       string(transaction.Status),
+			StatusDetail: string(transaction.StatusDetail),
 		})
 	}
 }

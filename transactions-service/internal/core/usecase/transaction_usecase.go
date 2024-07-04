@@ -15,7 +15,6 @@ type TransactionUseCase interface {
 }
 
 type transactionUseCase struct {
-	repository out.TransactionRepository
 	strategies []strategies.HandleTransactionStrategy
 }
 
@@ -23,7 +22,6 @@ func NewTransactionUseCase(
 	strategies []strategies.HandleTransactionStrategy,
 ) TransactionUseCase {
 	return &transactionUseCase{
-		repository: config.Container.Get(config.MongoRepository).(out.TransactionRepository),
 		strategies: strategies,
 	}
 }
@@ -39,14 +37,15 @@ func (s *transactionUseCase) CreateTransaction(createTransaction in.CreateTransa
 }
 
 func (s *transactionUseCase) UpdateTransaction(transactionID uint64, updateTransaction in.UpdateTransactionRequest) (*domain.Transaction, domain.ServiceError) {
-	transaction, err := s.repository.GetTransactionByID(transactionID)
+	repository := config.Container.Get(config.MongoRepository).(out.TransactionRepository)
+	transaction, err := repository.GetTransactionByID(transactionID)
 	if err != nil {
 		return nil, domain.ErrObtainingTransaction
 	}
 
 	// TODO: map fields to update
 
-	if err := s.repository.UpdateTransaction(transaction); err != nil {
+	if err := repository.UpdateTransaction(transaction); err != nil {
 		return nil, domain.ErrUpdatingTransaction
 	}
 
@@ -54,7 +53,8 @@ func (s *transactionUseCase) UpdateTransaction(transactionID uint64, updateTrans
 }
 
 func (s *transactionUseCase) GetTransactionsByUser(userID uint64) ([]*domain.Transaction, domain.ServiceError) {
-	transactions, err := s.repository.GetTransactionsByUserID(userID)
+	repository := config.Container.Get(config.MongoRepository).(out.TransactionRepository)
+	transactions, err := repository.GetTransactionsByUserID(userID)
 	if err != nil {
 		return nil, domain.ErrObtainingUserTransactions
 	}

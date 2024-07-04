@@ -3,16 +3,16 @@ package domain
 import "time"
 
 type Transaction struct {
-	ID           uint64
-	UserID       uint64
-	Description  string
-	Type         string
-	From         TransactionFrom
-	To           TransactionTo
-	Status       TransactionStatus
-	StatusDetail TransactionStatusDetail
-	CreatedAt    time.Time
-	UpdatedAt    time.Time
+	ID           string                  `bson:"-"`
+	UserID       uint64                  `bson:"user_id"`
+	Description  string                  `bson:"description"`
+	Type         string                  `bson:"type"`
+	From         TransactionFrom         `bson:"from"`
+	To           TransactionTo           `bson:"to"`
+	Status       TransactionStatus       `bson:"status"`
+	StatusDetail TransactionStatusDetail `bson:"status_detail"`
+	CreatedAt    time.Time               `bson:"created_at"`
+	UpdatedAt    time.Time               `bson:"updated_at"`
 }
 
 type TransactionStatus string
@@ -35,12 +35,12 @@ var (
 )
 
 type TransactionFrom struct {
-	UserID        uint64
-	Amount        float64
-	PaymentMethod string
+	UserID        uint64  `bson:"user_id"`
+	Amount        float64 `bson:"amount"`
+	PaymentMethod string  `bson:"payment_method"`
 }
 
 type TransactionTo struct {
-	UserID uint64
-	Amount float64
+	UserID uint64  `bson:"user_id"`
+	Amount float64 `bson:"amount"`
 }

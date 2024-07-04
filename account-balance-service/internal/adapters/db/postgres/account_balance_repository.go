@@ -43,6 +43,6 @@ func (r *Repository) Debit(userID uint64, amount float64) error {
 }
 
 func (r *Repository) Credit(userID uint64, amount float64) error {
-	_, err := r.db.Exec("UPDATE account_balance SET balance = $1 WHERE user_id = $2", amount, userID)
+	_, err := r.db.Exec("UPDATE account_balance SET balance = balance + $1 WHERE user_id = $2", amount, userID)
 	return err
 }
