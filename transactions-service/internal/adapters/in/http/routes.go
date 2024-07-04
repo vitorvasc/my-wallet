@@ -1,7 +1,7 @@
 package http
 
 import (
-	"transactions-service/internal/adapters/metrics"
+	"transactions-service/internal/adapters/out/metrics"
 
 	"github.com/gin-gonic/gin"
 )
