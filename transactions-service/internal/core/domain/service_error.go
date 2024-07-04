@@ -21,6 +21,12 @@ var (
 	ErrCreatingTransaction  = newServiceError(http.StatusInternalServerError, "error creating transaction")
 	ErrUpdatingTransaction  = newServiceError(http.StatusInternalServerError, "error updating transaction")
 
+	ErrObtainingUserByID   = newServiceError(http.StatusFailedDependency, "error obtaining user")
+	ErrParsingUserResponse = newServiceError(http.StatusInternalServerError, "error parsing user response")
+
+	ErrObtainingAccountBalance       = newServiceError(http.StatusFailedDependency, "error obtaining account balance")
+	ErrParsingAccountBalanceResponse = newServiceError(http.StatusInternalServerError, "error parsing account balance response")
+
 	ErrObtainingUserTransactions = newServiceError(http.StatusInternalServerError, "error obtaining user transactions")
 
 	ErrProcessingTransactionStrategyNotFound = newServiceError(http.StatusUnprocessableEntity, "error processing transaction strategy not found")

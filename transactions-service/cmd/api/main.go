@@ -5,11 +5,12 @@ import (
 	"log"
 	"time"
 
-	"transactions-service/internal/adapters/config"
-	"transactions-service/internal/adapters/db"
-	"transactions-service/internal/adapters/http"
-	"transactions-service/internal/adapters/kafka"
-	"transactions-service/internal/adapters/metrics"
+	in "transactions-service/internal/adapters/in/http"
+	"transactions-service/internal/adapters/out/db"
+	out "transactions-service/internal/adapters/out/http"
+	"transactions-service/internal/adapters/out/kafka"
+	"transactions-service/internal/adapters/out/metrics"
+	"transactions-service/internal/app/config"
 	"transactions-service/internal/core/services"
 	"transactions-service/internal/core/strategies"
 
@@ -23,6 +24,8 @@ func main() {
 	database := db.InitDB(ctx)
 
 	mongoRepository := db.NewMongoRepository(database)
+
+	_ = out.NewUsersRestClient()
 
 	kafkaProducer := kafka.NewKafkaProducer()
 	defer kafkaProducer.ProducerClose()
@@ -45,7 +48,7 @@ func main() {
 
 	r := gin.Default()
 
-	http.MapRoutes(r)
+	in.MapRoutes(r)
 	metrics.MapRoutes(r)
 
 	if err := r.Run(":8081"); err != nil {
