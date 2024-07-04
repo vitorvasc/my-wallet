@@ -20,8 +20,10 @@ var (
 	ErrParsingTransaction   = newServiceError(http.StatusInternalServerError, "error parsing transaction")
 	ErrCreatingTransaction  = newServiceError(http.StatusInternalServerError, "error creating transaction")
 	ErrUpdatingTransaction  = newServiceError(http.StatusInternalServerError, "error updating transaction")
+	ErrInvalidUsersInvolved = newServiceError(http.StatusUnprocessableEntity, "invalid users involved")
 
 	ErrObtainingUserByID   = newServiceError(http.StatusFailedDependency, "error obtaining user")
+	ErrUserNotFound        = newServiceError(http.StatusNotFound, "user not found")
 	ErrParsingUserResponse = newServiceError(http.StatusInternalServerError, "error parsing user response")
 
 	ErrObtainingAccountBalance       = newServiceError(http.StatusFailedDependency, "error obtaining account balance")
@@ -31,7 +33,8 @@ var (
 
 	ErrProcessingTransactionStrategyNotFound = newServiceError(http.StatusUnprocessableEntity, "error processing transaction strategy not found")
 
-	ErrInvalidAmount = newServiceError(http.StatusBadRequest, "invalid amount")
+	ErrInvalidAmount           = newServiceError(http.StatusBadRequest, "invalid amount")
+	ErrProcessingAccreditation = newServiceError(http.StatusInternalServerError, "error processing accreditation")
 )
 
 func newServiceError(code int, message string) ServiceError {

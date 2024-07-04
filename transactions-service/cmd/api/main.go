@@ -4,6 +4,7 @@ import (
 	"context"
 	"log"
 	"time"
+	"transactions-service/internal/core/usecase"
 
 	in "transactions-service/internal/adapters/in/http"
 	"transactions-service/internal/adapters/out/db"
@@ -24,11 +25,16 @@ func main() {
 	database := db.InitDB(ctx)
 
 	mongoRepository := db.NewMongoRepository(database)
+	config.Container.Register(config.MongoRepository, mongoRepository)
 
-	_ = out.NewUsersRestClient()
+	usersRestClient := out.NewUsersRestClient()
+	config.Container.Register(config.UsersRestClient, usersRestClient)
 
 	kafkaProducer := kafka.NewKafkaProducer()
 	defer kafkaProducer.ProducerClose()
+
+	accreditationService := services.NewAccreditationService(kafkaProducer)
+	config.Container.Register(config.AccreditationService, accreditationService)
 
 	transactionStrategies := []strategies.HandleTransactionStrategy{
 		strategies.NewAccountTransferStrategy(),
@@ -37,12 +43,7 @@ func main() {
 		strategies.NewWithdrawalStrategy(),
 	}
 
-	accreditationService := services.NewAccreditationService(kafkaProducer)
-	transactionService := services.NewTransactionService(
-		mongoRepository,
-		transactionStrategies,
-		accreditationService,
-	)
+	transactionService := usecase.NewTransactionUseCase(transactionStrategies)
 
 	config.Container.Register(config.TransactionService, transactionService)
 

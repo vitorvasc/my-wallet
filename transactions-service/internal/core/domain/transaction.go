@@ -26,11 +26,12 @@ var (
 type TransactionStatusDetail string
 
 var (
-	Processed         TransactionStatusDetail = "processed"
-	Refunded          TransactionStatusDetail = "refunded"
-	InvalidAmount     TransactionStatusDetail = "invalid_amount"
-	InsufficientFunds TransactionStatusDetail = "insufficient_funds"
-	UnexpectedError   TransactionStatusDetail = "unexpected_error"
+	Processed                    TransactionStatusDetail = "processed"
+	Refunded                     TransactionStatusDetail = "refunded"
+	InvalidAmount                TransactionStatusDetail = "invalid_amount"
+	AccreditationProcessingError TransactionStatusDetail = "accreditation_processing_error"
+	InsufficientFunds            TransactionStatusDetail = "insufficient_funds"
+	UnexpectedError              TransactionStatusDetail = "unexpected_error"
 )
 
 type TransactionFrom struct {

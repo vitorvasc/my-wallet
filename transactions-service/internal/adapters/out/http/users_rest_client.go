@@ -38,8 +38,12 @@ func (c *UsersRestClient) GetUserByID(userID uint64) (*domain.User, error) {
 	if err != nil {
 		return nil, domain.ErrObtainingUserByID
 	}
-	defer res.Body.Close()
 
+	if res.StatusCode == http.StatusNotFound {
+		return nil, domain.ErrUserNotFound
+	}
+
+	defer res.Body.Close()
 	user := new(domain.User)
 	err = json.NewDecoder(res.Body).Decode(user)
 	if err != nil {

@@ -3,9 +3,9 @@ package http
 import (
 	"net/http"
 	"strconv"
-	config2 "transactions-service/internal/app/config"
 
-	"transactions-service/internal/core/services"
+	"transactions-service/internal/app/config"
+	"transactions-service/internal/core/usecase"
 	in "transactions-service/internal/ports/in/http"
 	out "transactions-service/internal/ports/out/dto"
 
@@ -25,7 +25,7 @@ func createTransaction() gin.HandlerFunc {
 			return
 		}
 
-		service := config2.Container.Get(config2.TransactionService).(services.TransactionService)
+		service := config.Container.Get(config.TransactionService).(usecase.TransactionUseCase)
 		transaction, err := service.CreateTransaction(createTransactionRequest)
 		if err != nil {
 			c.JSON(err.GetCode(), out.NewApiError(err.GetCode(), err.GetMessage()))
@@ -58,7 +58,7 @@ func updateTransaction() gin.HandlerFunc {
 			return
 		}
 
-		service := config2.Container.Get(config2.TransactionService).(services.TransactionService)
+		service := config.Container.Get(config.TransactionService).(usecase.TransactionUseCase)
 		transaction, err := service.UpdateTransaction(transactionID, updateTransactionRequest)
 		if err != nil {
 			c.JSON(err.GetCode(), out.NewApiError(err.GetCode(), err.GetMessage()))
@@ -85,7 +85,7 @@ func getUserTransactions() gin.HandlerFunc {
 			return
 		}
 
-		service := config2.Container.Get(config2.TransactionService).(services.TransactionService)
+		service := config.Container.Get(config.TransactionService).(usecase.TransactionUseCase)
 		transactions, err := service.GetTransactionsByUser(userID)
 		if err != nil {
 			c.JSON(err.GetCode(), out.NewApiError(err.GetCode(), err.GetMessage()))

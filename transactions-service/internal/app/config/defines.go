@@ -1,5 +1,9 @@
 package config
 
 const (
-	TransactionService = "TransactionService"
+	AccreditationService = "AccreditationService"
+	UsersRestClient      = "UsersRestClient"
+	TransactionService   = "TransactionService"
+
+	MongoRepository = "MongoRepository"
 )
