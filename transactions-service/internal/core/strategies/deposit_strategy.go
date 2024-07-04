@@ -2,7 +2,9 @@ package strategies
 
 import (
 	"errors"
+	"log"
 	"time"
+
 	out "transactions-service/internal/adapters/out/http"
 	"transactions-service/internal/app/config"
 	"transactions-service/internal/core/domain"
@@ -21,10 +23,11 @@ func (s *depositStrategy) CanProcess(transactionType in.TransactionType) bool {
 }
 
 func (s *depositStrategy) Process(createTransaction in.CreateTransactionRequest) (*domain.Transaction, domain.ServiceError) {
-	usersRestClient := config.Container.Get(config.UsersRestClient).(out.UsersRestClient)
+	usersRestClient := config.Container.Get(config.UsersRestClient).(*out.UsersRestClient)
 	user, err := usersRestClient.GetUserByID(createTransaction.From.UserID)
 	if err != nil {
 		if errors.As(err, &domain.ErrUserNotFound) {
+			log.Printf("[error] user not found: %v", err)
 			return nil, domain.ErrInvalidUsersInvolved
 		}
 		return nil, domain.ErrObtainingUserByID

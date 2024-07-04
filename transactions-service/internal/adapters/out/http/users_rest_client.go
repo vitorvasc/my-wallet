@@ -3,6 +3,7 @@ package http
 import (
 	"encoding/json"
 	"fmt"
+	"log"
 	"net/http"
 	"time"
 
@@ -10,7 +11,7 @@ import (
 )
 
 const (
-	defaultHost = "http://localhost:8080"
+	defaultHost = "http://account-balance-service:8080"
 
 	pathGetUserByID       = "/v1/users/%d"
 	pathGetAccountBalance = "/v1/users/%d/account_balance"
@@ -36,6 +37,7 @@ func (c *UsersRestClient) GetUserByID(userID uint64) (*domain.User, error) {
 
 	res, err := c.client.Get(fmt.Sprintf("%s%s", c.Host, formattedPath))
 	if err != nil {
+		log.Printf("[GetUserByID] error obtaining user: %v", err)
 		return nil, domain.ErrObtainingUserByID
 	}
 
@@ -47,6 +49,7 @@ func (c *UsersRestClient) GetUserByID(userID uint64) (*domain.User, error) {
 	user := new(domain.User)
 	err = json.NewDecoder(res.Body).Decode(user)
 	if err != nil {
+		log.Printf("[GetUserByID] error parsing user: %v", err)
 		return nil, domain.ErrParsingUserResponse
 	}
 
@@ -58,6 +61,7 @@ func (c *UsersRestClient) GetAccountBalance(userID uint64) (*domain.AccountBalan
 
 	res, err := c.client.Get(fmt.Sprintf("%s%s", c.Host, formattedPath))
 	if err != nil {
+		log.Printf("[GetAccountBalance] error obtaining user: %v", err)
 		return nil, domain.ErrObtainingAccountBalance
 	}
 	defer res.Body.Close()
@@ -65,6 +69,7 @@ func (c *UsersRestClient) GetAccountBalance(userID uint64) (*domain.AccountBalan
 	accountBalance := new(domain.AccountBalance)
 	err = json.NewDecoder(res.Body).Decode(accountBalance)
 	if err != nil {
+		log.Printf("[GetAccountBalance] error parsing account balance: %v", err)
 		return nil, domain.ErrParsingAccountBalanceResponse
 	}
 
