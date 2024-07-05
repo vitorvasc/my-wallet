@@ -90,6 +90,6 @@ func getUserTransactions() gin.HandlerFunc {
 			return
 		}
 
-		c.JSON(http.StatusOK, transactions)
+		c.JSON(http.StatusOK, out.TimelineResponseFromTransactionList(transactions))
 	}
 }

@@ -17,7 +17,7 @@ func (r *MongoRepository) CreateTransaction(transaction *domain.Transaction) err
 		return domain.ErrCreatingTransaction
 	}
 
-	transaction.ID = res.InsertedID.(primitive.ObjectID).Hex()
+	transaction.ID = res.InsertedID.(primitive.ObjectID)
 	log.Printf("[repository] Transaction created with ID: %s", res.InsertedID)
 	return nil
 }
