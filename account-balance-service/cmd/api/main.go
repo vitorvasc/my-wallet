@@ -1,10 +1,10 @@
 package main
 
 import (
-	"account-balance-service/internal/adapters/db/postgres"
 	"log"
 
 	"account-balance-service/internal/adapters/config"
+	"account-balance-service/internal/adapters/db/postgres"
 	"account-balance-service/internal/adapters/http"
 	"account-balance-service/internal/adapters/kafka"
 	"account-balance-service/internal/adapters/metrics"

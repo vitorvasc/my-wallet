@@ -34,6 +34,7 @@ var (
 	ErrProcessingTransactionStrategyNotFound = newServiceError(http.StatusUnprocessableEntity, "error processing transaction strategy not found")
 
 	ErrInvalidAmount           = newServiceError(http.StatusBadRequest, "invalid amount")
+	ErrInsufficientFunds       = newServiceError(http.StatusUnprocessableEntity, "insufficient funds")
 	ErrProcessingAccreditation = newServiceError(http.StatusInternalServerError, "error processing accreditation")
 )
 
