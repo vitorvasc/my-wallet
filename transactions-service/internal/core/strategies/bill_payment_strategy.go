@@ -18,3 +18,11 @@ func (s *billPaymentStrategy) CanProcess(transactionType in.TransactionType) boo
 func (s *billPaymentStrategy) Process(createTransaction in.CreateTransactionRequest) (*domain.Transaction, domain.ServiceError) {
 	return nil, nil
 }
+
+func (s *billPaymentStrategy) mapToTransaction(createTransaction in.CreateTransactionRequest, user *domain.User) *domain.Transaction {
+
+}
+
+func (s *billPaymentStrategy) persistTransaction(transaction *domain.Transaction) {
+
+}

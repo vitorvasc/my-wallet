@@ -31,8 +31,8 @@ func (s *depositStrategy) Process(createTransaction in.CreateTransactionRequest)
 		return nil, domain.ErrObtainingUserByID
 	}
 
-	transaction := mapToTransaction(createTransaction, user)
-	defer persistTransaction(transaction)
+	transaction := s.mapToTransaction(createTransaction, user)
+	defer s.persistTransaction(transaction)
 
 	if createTransaction.From.Amount <= 0 {
 		transaction.Status = domain.Rejected
@@ -54,12 +54,7 @@ func (s *depositStrategy) Process(createTransaction in.CreateTransactionRequest)
 	return transaction, nil
 }
 
-func persistTransaction(transaction *domain.Transaction) {
-	r := config.Container.Get(config.MongoRepository).(repository.TransactionRepository)
-	_ = r.CreateTransaction(transaction)
-}
-
-func mapToTransaction(createTransaction in.CreateTransactionRequest, user *domain.User) *domain.Transaction {
+func (s *depositStrategy) mapToTransaction(createTransaction in.CreateTransactionRequest, user *domain.User) *domain.Transaction {
 	clock := config.Container.Get(config.Clock).(utils.Clock)
 	return &domain.Transaction{
 		UserID:      user.UserID,
@@ -76,4 +71,9 @@ func mapToTransaction(createTransaction in.CreateTransactionRequest, user *domai
 		CreatedAt: clock.Now(),
 		UpdatedAt: clock.Now(),
 	}
+}
+
+func (s *depositStrategy) persistTransaction(transaction *domain.Transaction) {
+	r := config.Container.Get(config.MongoRepository).(repository.TransactionRepository)
+	_ = r.CreateTransaction(transaction)
 }
