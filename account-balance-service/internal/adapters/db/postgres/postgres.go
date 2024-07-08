@@ -29,11 +29,11 @@ func InitDB() *sql.DB {
 	conn := fmt.Sprintf("host=%s port=%s user=%s password=%s dbname=%s sslmode=disable", os.Getenv(host), os.Getenv(port), os.Getenv(user), os.Getenv(password), os.Getenv(dbname))
 	db, err := sql.Open("postgres", conn)
 	if err != nil {
-		log.Fatalf("error opening db: %v", err)
+		log.Fatalf("error opening repository: %v", err)
 	}
 
 	if err = db.Ping(); err != nil {
-		log.Fatalf("error pinging db: %v", err)
+		log.Fatalf("error pinging repository: %v", err)
 	}
 
 	return db

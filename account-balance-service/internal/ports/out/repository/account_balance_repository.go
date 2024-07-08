@@ -1,4 +1,4 @@
-package db
+package repository
 
 type AccountBalanceRepository interface {
 	GetAccountBalance(userID uint64) (float64, error)

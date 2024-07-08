@@ -4,14 +4,14 @@ import (
 	"testing"
 
 	"account-balance-service/internal/core/domain"
-	"account-balance-service/internal/ports/out/db"
+	"account-balance-service/internal/ports/out/repository"
 
 	"github.com/stretchr/testify/suite"
 )
 
 type AccountBalanceServiceTestSuite struct {
 	suite.Suite
-	repository  *db.AccountBalanceRepositoryMock
+	repository  *repository.AccountBalanceRepositoryMock
 	userService *UserServiceMock
 }
 
@@ -20,7 +20,7 @@ func TestAccountBalanceService(t *testing.T) {
 }
 
 func (suite *AccountBalanceServiceTestSuite) setup() AccountBalanceService {
-	suite.repository = new(db.AccountBalanceRepositoryMock)
+	suite.repository = new(repository.AccountBalanceRepositoryMock)
 	suite.userService = new(UserServiceMock)
 	return NewAccountBalanceService(suite.repository, suite.userService)
 }

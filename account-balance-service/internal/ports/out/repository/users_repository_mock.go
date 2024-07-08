@@ -1,4 +1,4 @@
-package db
+package repository
 
 import (
 	"account-balance-service/internal/core/domain"

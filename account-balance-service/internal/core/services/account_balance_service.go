@@ -2,7 +2,7 @@ package services
 
 import (
 	"account-balance-service/internal/core/domain"
-	"account-balance-service/internal/ports/out/db"
+	"account-balance-service/internal/ports/out/repository"
 )
 
 type AccountBalanceService interface {
@@ -12,11 +12,11 @@ type AccountBalanceService interface {
 }
 
 type accountBalanceService struct {
-	repository  db.AccountBalanceRepository
+	repository  repository.AccountBalanceRepository
 	userService UserService
 }
 
-func NewAccountBalanceService(repository db.AccountBalanceRepository, userService UserService) AccountBalanceService {
+func NewAccountBalanceService(repository repository.AccountBalanceRepository, userService UserService) AccountBalanceService {
 	return &accountBalanceService{
 		repository:  repository,
 		userService: userService,

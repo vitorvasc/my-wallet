@@ -2,9 +2,9 @@ package services
 
 import (
 	"errors"
-	
+
 	"account-balance-service/internal/core/domain"
-	"account-balance-service/internal/ports/out/db"
+	"account-balance-service/internal/ports/out/repository"
 )
 
 type UserService interface {
@@ -12,10 +12,10 @@ type UserService interface {
 }
 
 type userService struct {
-	repository db.UsersRepository
+	repository repository.UsersRepository
 }
 
-func NewUserService(repository db.UsersRepository) UserService {
+func NewUserService(repository repository.UsersRepository) UserService {
 	return &userService{repository}
 }
 
