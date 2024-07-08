@@ -5,6 +5,7 @@ import (
 	"log"
 	"time"
 	"transactions-service/internal/core/usecase"
+	"transactions-service/internal/core/utils"
 
 	in "transactions-service/internal/adapters/in/http"
 	"transactions-service/internal/adapters/out/db"
@@ -19,6 +20,9 @@ import (
 )
 
 func main() {
+	clock := utils.NewClock()
+	config.Container.Register(config.Clock, clock)
+
 	ctx, cancel := context.WithTimeout(context.Background(), 10*time.Second)
 	defer cancel()
 
