@@ -32,6 +32,8 @@ func (s *depositStrategy) Process(createTransaction in.CreateTransactionRequest)
 	}
 
 	transaction := mapToTransaction(createTransaction, user)
+	defer persistTransaction(transaction)
+
 	if createTransaction.From.Amount <= 0 {
 		transaction.Status = domain.Rejected
 		transaction.StatusDetail = domain.InvalidAmount
@@ -48,8 +50,6 @@ func (s *depositStrategy) Process(createTransaction in.CreateTransactionRequest)
 
 	transaction.Status = domain.Approved
 	transaction.StatusDetail = domain.Processed
-
-	persistTransaction(transaction)
 
 	return transaction, nil
 }

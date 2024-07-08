@@ -1,6 +1,7 @@
 package strategies
 
 import (
+	"errors"
 	"testing"
 	"time"
 	"transactions-service/internal/app/config"
@@ -185,6 +186,51 @@ func (suite *DepositStrategyTestSuite) TestProcess() {
 			},
 			expected: func() (*domain.Transaction, domain.ServiceError) {
 				return nil, domain.ErrObtainingUserByID
+			},
+		},
+		{
+			name: "Given failure on credit user balance, should return rejected transaction with status detail accreditation processing error",
+			given: in.CreateTransactionRequest{
+				Type: in.Deposit,
+				From: in.TransactionFrom{
+					Amount:        100,
+					PaymentMethod: in.PureCash,
+				},
+				To: in.TransactionTo{
+					UserID: 1,
+					Amount: 100,
+				},
+			},
+			mocks: func() {
+				usersRepositoryMock := new(repository.UsersRepositoryMock)
+				usersRepositoryMock.On("GetUserByID", mock.Anything).Return(&domain.User{
+					UserID: 1,
+				}, nil)
+				config.Container.Register(config.UsersRestClient, usersRepositoryMock)
+
+				accreditationRepositoryMock := new(repository.AccreditationRepositoryMock)
+				accreditationRepositoryMock.On("CreateUserBalanceCredit", mock.Anything).Return(errors.New("error"))
+				accreditationService := services.NewAccreditationService(accreditationRepositoryMock)
+				config.Container.Register(config.AccreditationService, accreditationService)
+			},
+			expected: func() (*domain.Transaction, domain.ServiceError) {
+				return &domain.Transaction{
+					ID:           primitive.ObjectID{},
+					UserID:       1,
+					Type:         "deposit",
+					Status:       "rejected",
+					StatusDetail: "accreditation_processing_error",
+					From: domain.TransactionFrom{
+						Amount:        100,
+						PaymentMethod: "pure_cash",
+					},
+					To: domain.TransactionTo{
+						UserID: 1,
+						Amount: 100,
+					},
+					CreatedAt: time.Date(2023, 1, 1, 0, 0, 0, 0, time.UTC),
+					UpdatedAt: time.Date(2023, 1, 1, 0, 0, 0, 0, time.UTC),
+				}, domain.ErrProcessingAccreditation
 			},
 		},
 	}
